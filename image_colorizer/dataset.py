@@ -5,9 +5,9 @@ from skimage.color import rgb2lab
 import torch
 from torch.utils.data import Dataset, DataLoader
 from torchvision import transforms
-from fastai.data.external import untar_data, URLs
+from fastai.data.external import untar_data, URLs # type: ignore
 
-class ColorizationDataLoader:
+class   ColorizationDataLoader:
     def __init__(self, path='', num_images=10000, size=256, batch_size=32, n_workers=4, pin_memory=True):
         self.path = path
         self.num_images = num_images
