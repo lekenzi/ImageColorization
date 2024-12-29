@@ -18,7 +18,7 @@ ImageColorization is a Python-based project that utilizes deep learning models t
 1. Clone the repository:
 
     ```shell
-    git clone https://github.com/your-username/ImageColorization.git
+    git clone https://github.com/lekenzi/ImageColorization.git
     ```
 
 2. Install the required dependencies:
