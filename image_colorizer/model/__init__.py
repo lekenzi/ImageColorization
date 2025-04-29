@@ -25,7 +25,7 @@ class MainModel(nn.Module):
         self.opt_G = optim.Adam(self.net_G.parameters(), lr=lr_G, betas=(beta1, beta2))
         self.opt_D = optim.Adam(self.net_D.parameters(), lr=lr_D, betas=(beta1, beta2))
 
-    def set_requires_grad(self, model, requires_grad=True)  :
+    def set_requires_grad(self, model, requires_grad=True):
         for p in model.parameters():
             p.requires_grad = requires_grad
 
