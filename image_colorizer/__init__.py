@@ -15,8 +15,6 @@ from torch import nn, optim
 from torchvision import transforms
 from torchvision.utils import make_grid
 from torch.utils.data import Dataset, DataLoader
-from torchsummary import summary
-from torchviz import make_dot
 from torch.utils.tensorboard import SummaryWriter
 import cv2
 import os
