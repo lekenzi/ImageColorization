@@ -36,7 +36,7 @@ cymem==2.0.11
     #   thinc
 fastai==2.8.1
     # via imagecolorization (pyproject.toml)
-fastcore==1.8.1
+fastcore==1.8.8
     # via
     #   fastai
     #   fastdownload
