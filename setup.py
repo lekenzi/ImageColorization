@@ -16,7 +16,7 @@ setup(
         'torchsummary==1.5.1',
         'torchviz==0.0.2',
         'tensorboard==2.9.1',
-        'opencv-python-headless==4.6.0.66',
+        'opencv-python-headless==4.8.1.78',
         'torch_xla'  # For TPU support, version may depend on the TPU setup
     ],
     entry_points={
