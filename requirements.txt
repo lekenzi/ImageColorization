@@ -114,7 +114,7 @@ numpy==2.2.5
     #   thinc
     #   tifffile
     #   torchvision
-nvidia-cublas-cu12==12.4.5.8
+nvidia-cublas-cu12==12.9.1.4
     # via
     #   nvidia-cudnn-cu12
     #   nvidia-cusolver-cu12
