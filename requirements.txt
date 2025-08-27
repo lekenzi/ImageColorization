@@ -51,7 +51,7 @@ fasttransform==0.0.2
     # via fastai
 filelock==3.18.0
     # via torch
-fonttools==4.57.0
+fonttools==4.59.2
     # via matplotlib
 fsspec==2025.3.2
     # via torch
