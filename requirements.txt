@@ -215,7 +215,7 @@ scikit-learn==1.6.1
     # via
     #   imagecolorization (pyproject.toml)
     #   fastai
-scipy==1.15.2
+scipy==1.16.1
     # via
     #   fastai
     #   scikit-image
