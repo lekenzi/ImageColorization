@@ -211,7 +211,7 @@ rich==14.0.0
     #   typer
 scikit-image==0.25.2
     # via imagecolorization (pyproject.toml)
-scikit-learn==1.6.1
+scikit-learn==1.7.1
     # via
     #   imagecolorization (pyproject.toml)
     #   fastai
