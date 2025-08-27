@@ -67,7 +67,7 @@ jinja2==3.1.6
     #   torch
 joblib==1.4.2
     # via scikit-learn
-kiwisolver==1.4.8
+kiwisolver==1.4.9
     # via matplotlib
 langcodes==3.5.0
     # via spacy
