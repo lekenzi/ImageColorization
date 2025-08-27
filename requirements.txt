@@ -176,7 +176,7 @@ plum-dispatch==2.5.7
     # via
     #   fastai
     #   fasttransform
-preshed==3.0.9
+preshed==3.0.10
     # via
     #   spacy
     #   thinc
