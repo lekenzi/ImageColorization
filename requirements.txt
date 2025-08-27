@@ -180,7 +180,7 @@ preshed==3.0.9
     # via
     #   spacy
     #   thinc
-pydantic==2.11.3
+pydantic==2.11.7
     # via
     #   confection
     #   spacy
