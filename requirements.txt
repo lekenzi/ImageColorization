@@ -170,7 +170,7 @@ pillow==11.2.1
     #   matplotlib
     #   scikit-image
     #   torchvision
-pip==25.1
+pip==25.2
     # via fastai
 plum-dispatch==2.5.7
     # via
