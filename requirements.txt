@@ -289,7 +289,7 @@ typing-extensions==4.13.2
     #   torch
     #   typer
     #   typing-inspection
-typing-inspection==0.4.0
+typing-inspection==0.4.1
     # via pydantic
 tzdata==2025.2
     # via pandas
