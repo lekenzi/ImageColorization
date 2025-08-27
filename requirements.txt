@@ -250,7 +250,7 @@ thinc==8.3.6
     # via spacy
 threadpoolctl==3.6.0
     # via scikit-learn
-tifffile==2025.3.30
+tifffile==2025.8.28
     # via scikit-image
 torch==2.6.0
     # via
