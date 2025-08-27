@@ -188,7 +188,7 @@ pydantic==2.11.3
     #   weasel
 pydantic-core==2.33.1
     # via pydantic
-pygments==2.19.1
+pygments==2.19.2
     # via rich
 pyparsing==3.2.3
     # via matplotlib
