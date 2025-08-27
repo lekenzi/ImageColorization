@@ -279,7 +279,7 @@ typer==0.15.3
     # via
     #   spacy
     #   weasel
-typing-extensions==4.13.2
+typing-extensions==4.15.0
     # via
     #   cloudpathlib
     #   plum-dispatch
