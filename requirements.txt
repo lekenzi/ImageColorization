@@ -55,7 +55,7 @@ fonttools==4.57.0
     # via matplotlib
 fsspec==2025.3.2
     # via torch
-graphviz==0.20.3
+graphviz==0.21
     # via torchviz
 idna==3.10
     # via requests
