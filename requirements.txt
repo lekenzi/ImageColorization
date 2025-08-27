@@ -259,7 +259,7 @@ torch==2.6.0
     #   torchaudio
     #   torchvision
     #   torchviz
-torchaudio==2.6.0
+torchaudio==2.8.0
     # via imagecolorization (pyproject.toml)
 torchsummary==1.5.1
     # via imagecolorization (pyproject.toml)
