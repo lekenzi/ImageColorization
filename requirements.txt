@@ -34,7 +34,7 @@ cymem==2.0.11
     #   preshed
     #   spacy
     #   thinc
-fastai==2.8.1
+fastai==2.8.4
     # via imagecolorization (pyproject.toml)
 fastcore==1.8.1
     # via
