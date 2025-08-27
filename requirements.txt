@@ -94,7 +94,7 @@ murmurhash==1.0.12
     #   preshed
     #   spacy
     #   thinc
-networkx==3.4.2
+networkx==3.5
     # via
     #   scikit-image
     #   torch
