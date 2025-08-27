@@ -15,7 +15,7 @@ certifi==2025.4.26
     # via requests
 charset-normalizer==3.4.1
     # via requests
-click==8.1.8
+click==8.2.1
     # via typer
 cloudpathlib==0.21.0
     # via weasel
