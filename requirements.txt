@@ -160,7 +160,7 @@ packaging==25.0
     #   spacy
     #   thinc
     #   weasel
-pandas==2.2.3
+pandas==2.3.2
     # via fastai
 pillow==11.2.1
     # via
