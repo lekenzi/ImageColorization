@@ -232,7 +232,7 @@ six==1.17.0
     # via python-dateutil
 smart-open==7.1.0
     # via weasel
-spacy==3.8.5
+spacy==3.8.7
     # via fastai
 spacy-legacy==3.0.12
     # via spacy
