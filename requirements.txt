@@ -49,7 +49,7 @@ fastprogress==1.0.3
     #   fastdownload
 fasttransform==0.0.2
     # via fastai
-filelock==3.18.0
+filelock==3.19.1
     # via torch
 fonttools==4.57.0
     # via matplotlib
