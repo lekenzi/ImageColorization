@@ -1,9 +1,10 @@
+import matplotlib.pyplot as plt
+import numpy as np
 import torch
 import torchvision.transforms as transforms
 from PIL import Image
-import numpy as np
 from skimage.color import rgb2lab
-import matplotlib.pyplot as plt
+
 
 class ColorizationVisualizer:
     """
@@ -33,18 +34,20 @@ class ColorizationVisualizer:
         Returns:
             torch.Tensor: The L channel of the LAB image.
         """
-        transform = transforms.Compose([
-            transforms.Resize((self.size, self.size), Image.BICUBIC),
-        ])
+        transform = transforms.Compose(
+            [
+                transforms.Resize((self.size, self.size), Image.BICUBIC),
+            ]
+        )
 
         img = Image.open(image_path).convert("RGB")
         img = transform(img)
         img = np.array(img)
         img_lab = rgb2lab(img).astype("float32")  # Converting RGB to L*a*b
         img_lab = transforms.ToTensor()(img_lab)
-        L = img_lab[[0], ...] / 50. - 1.  # Between -1 and 1
+        L = img_lab[[0], ...] / 50.0 - 1.0  # Between -1 and 1
 
-        return L.unsqueeze(0).to(self.device), L.to('cpu')
+        return L.unsqueeze(0).to(self.device), L.to("cpu")
 
     def display_colorization(self, image_path):
         """
@@ -92,8 +95,8 @@ class ColorizationVisualizer:
         Returns:
             np.array: RGB image.
         """
-        L = (L + 1.) * 50.
-        ab = ab * 110.
+        L = (L + 1.0) * 50.0
+        ab = ab * 110.0
         lab = torch.cat([L, ab], dim=1).data.cpu().numpy().transpose((1, 2, 0))
         rgb = lab2rgb(lab)
         return rgb

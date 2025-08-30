@@ -1,4 +1,4 @@
-import torch    
+import torch
 from torch import nn, optim
 
 from image_colorizer.model.gan_loss import GANLoss
@@ -8,19 +8,24 @@ from image_colorizer.model.unet import Unet
 
 
 class MainModel(nn.Module):
-    def __init__(self, net_G=None, lr_G=2e-4, lr_D=2e-4,
-                 beta1=0.5, beta2=0.999, lambda_L1=100.):
+    def __init__(
+        self, net_G=None, lr_G=2e-4, lr_D=2e-4, beta1=0.5, beta2=0.999, lambda_L1=100.0
+    ):
         super().__init__()
 
         self.device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
         self.lambda_L1 = lambda_L1
 
         if net_G is None:
-            self.net_G = init_model(Unet(input_c=1, output_c=2, n_down=8, num_filters=64), self.device)
+            self.net_G = init_model(
+                Unet(input_c=1, output_c=2, n_down=8, num_filters=64), self.device
+            )
         else:
             self.net_G = net_G.to(self.device)
-        self.net_D = init_model(PatchDiscriminator(input_c=3, n_down=3, num_filters=64), self.device)
-        self.GANcriterion = GANLoss(gan_mode='vanilla').to(self.device)
+        self.net_D = init_model(
+            PatchDiscriminator(input_c=3, n_down=3, num_filters=64), self.device
+        )
+        self.GANcriterion = GANLoss(gan_mode="vanilla").to(self.device)
         self.L1criterion = nn.L1Loss()
         self.opt_G = optim.Adam(self.net_G.parameters(), lr=lr_G, betas=(beta1, beta2))
         self.opt_D = optim.Adam(self.net_D.parameters(), lr=lr_D, betas=(beta1, beta2))
@@ -34,16 +39,16 @@ class MainModel(nn.Module):
             p.requires_grad = requires_grad
 
     def setup_input(self, data):
-        self.L = data['L'].to(self.device)
-        self.ab = data['ab'].to(self.device)
+        self.L = data["L"].to(self.device)
+        self.ab = data["ab"].to(self.device)
 
-    def get_images(self,image):
+    def get_images(self, image):
         self.L = image.to(self.device)
 
     def forward_data(self):
         self.fake_color = self.net_G(self.L)
-        
-    def forward(self,data):
+
+    def forward(self, data):
         return self.net_G(data)
 
     def preocess_image(self, image):
