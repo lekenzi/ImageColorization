@@ -8,7 +8,7 @@ setup(
         "numpy==1.22.4",
         "Pillow==9.1.0",
         "pathlib==1.0.1",
-        "tqdm==4.64.0",
+        "tqdm==4.66.3",
         "matplotlib==3.5.2",
         "scikit-image==0.19.3",
         "torch==1.12.0",
