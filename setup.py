@@ -6,7 +6,7 @@ setup(
     packages=find_packages(),
     install_requires=[
         "numpy==1.22.4",
-        "Pillow==9.1.0",
+        "Pillow==10.3.0",
         "pathlib==1.0.1",
         "tqdm==4.64.0",
         "matplotlib==3.5.2",

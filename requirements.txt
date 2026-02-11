@@ -1,7 +1,7 @@
 fastai==2.8.4
 matplotlib==3.10.6
 numpy==2.3.2
-Pillow==11.3.0
+Pillow==12.1.1
 setuptools==80.9.0
 skimage==0.0
 torch==2.8.0
