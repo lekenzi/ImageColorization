@@ -5,7 +5,7 @@ setup(
     version="0.1.0",
     packages=find_packages(),
     install_requires=[
-        "numpy==1.22.4",
+        "numpy==2.5.1",
         "Pillow==9.1.0",
         "pathlib==1.0.1",
         "tqdm==4.64.0",
