@@ -14,7 +14,7 @@ setup(
         "torch==1.12.0",
         "torchvision==0.13.0",
         "torchsummary==1.5.1",
-        "torchviz==0.0.2",
+        "torchviz==0.0.3",
         "tensorboard==2.21.0",
         "opencv-python-headless==4.8.1.78",
         "torch_xla",  # For TPU support, version may depend on the TPU setup
