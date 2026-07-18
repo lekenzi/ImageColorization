@@ -1,5 +1,5 @@
 fastai==2.8.4
-matplotlib==3.10.6
+matplotlib==3.11.1
 numpy==2.5.1
 Pillow==11.3.0
 setuptools==80.9.0

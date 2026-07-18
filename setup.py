@@ -9,7 +9,7 @@ setup(
         "Pillow==9.1.0",
         "pathlib==1.0.1",
         "tqdm==4.64.0",
-        "matplotlib==3.5.2",
+        "matplotlib==3.11.1",
         "scikit-image==0.26.0",
         "torch==1.12.0",
         "torchvision==0.13.0",
