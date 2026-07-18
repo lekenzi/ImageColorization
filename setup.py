@@ -12,7 +12,7 @@ setup(
         "matplotlib==3.11.1",
         "scikit-image==0.26.0",
         "torch==1.12.0",
-        "torchvision==0.13.0",
+        "torchvision==0.28.0",
         "torchsummary==1.5.1",
         "torchviz==0.0.3",
         "tensorboard==2.21.0",
