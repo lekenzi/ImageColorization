@@ -10,7 +10,7 @@ setup(
         "pathlib==1.0.1",
         "tqdm==4.64.0",
         "matplotlib==3.5.2",
-        "scikit-image==0.19.3",
+        "scikit-image==0.26.0",
         "torch==1.12.0",
         "torchvision==0.13.0",
         "torchsummary==1.5.1",
