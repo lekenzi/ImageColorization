@@ -1,102 +1,60 @@
+"""Inference helpers: colorize a single image with a trained model."""
+
 import matplotlib.pyplot as plt
 import numpy as np
 import torch
-import torchvision.transforms as transforms
+import torch.nn.functional as F
 from PIL import Image
 from skimage.color import rgb2lab
+from torchvision import transforms
+
+from image_colorizer.helper import lab_to_rgb
+
+
+def _to_L_tensor(img: Image.Image) -> torch.Tensor:
+    """Convert an RGB PIL image to a normalized L tensor of shape (1, 1, H, W)."""
+    lab = rgb2lab(np.array(img)).astype("float32")
+    L = transforms.ToTensor()(lab)[[0], ...] / 50.0 - 1.0
+    return L.unsqueeze(0)
 
 
 class ColorizationVisualizer:
-    """
-    Class to handle the visualization of image colorization.
-    """
+    """Colorize images with a trained :class:`MainModel`."""
 
-    def __init__(self, model, size=256, device=torch.device("cpu")):
-        """
-        Initialize the ColorizationVisualizer with a model and configuration.
-
-        Args:
-            model: The colorization model to be used.
-            size (int): The size to which images are resized.
-            device: The device on which to perform computations (CPU or GPU).
-        """
+    def __init__(self, model, size=256, device=None):
         self.model = model
         self.size = size
-        self.device = device
+        self.device = device if device is not None else model.device
 
-    def load_image(self, image_path):
+    @torch.no_grad()
+    def colorize(self, image_path) -> np.ndarray:
+        """Return the colorized image as an RGB float array at its original resolution.
+
+        The generator runs at ``size`` x ``size``; the predicted ab channels are
+        upsampled and combined with the full-resolution L channel.
         """
-        Load image from disk, convert it to LAB color space, and convert to a tensor.
+        original = Image.open(image_path).convert("RGB")
+        small = original.resize((self.size, self.size), Image.Resampling.BICUBIC)
 
-        Args:
-            image_path (str): Path to the image file.
+        self.model.net_G.eval()
+        ab = self.model.net_G(_to_L_tensor(small).to(self.device)).cpu()
 
-        Returns:
-            torch.Tensor: The L channel of the LAB image.
-        """
-        transform = transforms.Compose(
-            [
-                transforms.Resize((self.size, self.size), transforms.InterpolationMode.BICUBIC),
-            ]
-        )
+        L_full = _to_L_tensor(original)
+        ab_full = F.interpolate(ab, size=L_full.shape[-2:], mode="bilinear", align_corners=False)
+        return lab_to_rgb(L_full, ab_full)[0]
 
-        img = Image.open(image_path).convert("RGB")
-        img = transform(img)
-        img = np.array(img)
-        img_lab = rgb2lab(img).astype("float32")  # Converting RGB to L*a*b
-        img_lab = transforms.ToTensor()(img_lab)
-        L = img_lab[[0], ...] / 50.0 - 1.0  # Between -1 and 1
-
-        return L.unsqueeze(0).to(self.device), L.to("cpu")
+    def save_colorization(self, image_path, output_path):
+        rgb = np.clip(self.colorize(image_path), 0.0, 1.0)
+        Image.fromarray((rgb * 255).round().astype("uint8")).save(output_path)
 
     def display_colorization(self, image_path):
-        """
-        Display both the colorized and black-and-white versions of the image.
-
-        Args:
-            image_path (str): Path to the image file.
-        """
-        # Load the image
-        image, l = self.load_image(image_path)
-
-        print("Image shape:", image.shape)
-
-        # Colorize the image using the model
-        self.model.net_G.eval()
-        with torch.no_grad():
-            self.model.get_images(image)
-            self.model.forward_data()
-        self.model.net_G.train()
-        fake_color = self.model.fake_color.detach()
-        L = self.model.L
-        fake_imgs = self.lab_to_rgb(L, fake_color)
-
-        fake_imgs = fake_imgs.squeeze()
-
-        # Display the images
-        fig, axes = plt.subplots(1, 2, figsize=(12, 6))
-        axes[0].imshow(Image.open(image_path))
-        axes[0].set_title("Original Image")
-        axes[0].axis("off")
-        axes[1].imshow(fake_imgs)
-        axes[1].set_title("Colorized Image")
-        axes[1].axis("off")
+        """Show the original and colorized images side by side."""
+        rgb = self.colorize(image_path)
+        _, axes = plt.subplots(1, 2, figsize=(12, 6))
+        axes[0].imshow(Image.open(image_path).convert("L"), cmap="gray")
+        axes[0].set_title("Input")
+        axes[1].imshow(rgb)
+        axes[1].set_title("Colorized")
+        for ax in axes:
+            ax.axis("off")
         plt.show()
-
-    @staticmethod
-    def lab_to_rgb(L, ab):
-        """
-        Convert LAB image to RGB.
-
-        Args:
-            L (torch.Tensor): L channel of the LAB image.
-            ab (torch.Tensor): AB channels of the LAB image.
-
-        Returns:
-            np.array: RGB image.
-        """
-        L = (L + 1.0) * 50.0
-        ab = ab * 110.0
-        lab = torch.cat([L, ab], dim=1).data.cpu().numpy().transpose((1, 2, 0))
-        rgb = lab2rgb(lab)
-        return rgb
