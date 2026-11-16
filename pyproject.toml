@@ -6,15 +6,15 @@ readme = "README.md"
 license = "Apache-2.0"
 license-files = ["LICENSE"]
 authors = [{ name = "Deon Levon Dmello", email = "deondmello@gmail.com" }]
-requires-python = ">=3.10"
+requires-python = ">=3.11"
 dependencies = [
     "fastai>=2.8.1",
     "matplotlib>=3.10.1",
     "numpy>=2.2.5",
-    "pillow>=11.2.1",
+    "pillow>=13.0.0",
     "scikit-image>=0.25.2",
-    "torch>=2.6.0",
-    "torchvision>=0.21.0",
+    "torch>=2.10.0",
+    "torchvision>=0.25.0",
     "tqdm>=4.67.1",
 ]
 
