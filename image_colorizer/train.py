@@ -5,7 +5,6 @@ from image_colorizer import get_device
 from image_colorizer.dataset import ColorizationDataLoader
 from image_colorizer.helper import visualize
 from image_colorizer.model import MainModel
-from image_colorizer.model.init_weights import init_model
 
 
 class ColorizationTrainer:
@@ -79,8 +78,7 @@ class ColorizationTrainer:
                     print(f"Model saved at iteration {i} of epoch {e+1}")
 
 
-model = MainModel()
-model = init_model(model, get_device())
+model = MainModel(device=get_device())
 
 colorizationDataLoader = ColorizationDataLoader()
 train_dl, val_dl = colorizationDataLoader.get_dataloaders()

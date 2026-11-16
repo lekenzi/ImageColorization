@@ -42,10 +42,6 @@ class MainModel(nn.Module):
         for p in model.parameters():
             p.requires_grad = requires_grad
 
-    def set_requires_grad(self, model, requires_grad=True):
-        for p in model.parameters():
-            p.requires_grad = requires_grad
-
     def setup_input(self, data):
         self.L = data["L"].to(self.device)
         self.ab = data["ab"].to(self.device)
@@ -59,7 +55,7 @@ class MainModel(nn.Module):
     def forward(self, data):
         return self.net_G(data)
 
-    def preocess_image(self, image):
+    def process_image(self, image):
         return self.net_G(image)
 
     def backward_D(self):
