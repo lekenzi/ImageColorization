@@ -1,4 +1,23 @@
-__pycache__
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+build/
+dist/
+.venv/
+
+# Tooling
+.vscode/
+.idea/
+.ruff_cache/
+.pytest_cache/
+.ipynb_checkpoints/
+.DS_Store
+
+# Data, checkpoints and outputs
+data/
+checkpoints/
+outputs/
 *.pth
-.vscode
-.venv
+*.pt
+colorization_*.png
