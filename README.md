@@ -35,6 +35,16 @@ The trainer writes a checkpoint to `checkpoints/model.pth` after every epoch. It
 progress plots (input / prediction / ground truth) to `outputs/`. Run
 `uv run colorize-train --help` for all options.
 
+### Pretrained weights
+
+A trained checkpoint is attached to the [v0.1.0 release](https://github.com/lekenzi/ImageColorization/releases/tag/v0.1.0):
+
+```shell
+mkdir -p checkpoints
+gh release download v0.1.0 -p model.pth -D checkpoints
+# or: curl -L -o checkpoints/model.pth https://github.com/lekenzi/ImageColorization/releases/download/v0.1.0/model.pth
+```
+
 ### Colorize an image
 
 ```shell
