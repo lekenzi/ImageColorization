@@ -1,0 +1,49 @@
+[project]
+name = "image-colorizer"
+version = "0.1.0"
+description = "Colorize black-and-white images with a U-Net generator trained as a conditional GAN (pix2pix-style) in PyTorch."
+readme = "README.md"
+license = "Apache-2.0"
+license-files = ["LICENSE"]
+authors = [{ name = "Deon Levon Dmello", email = "deondmello@gmail.com" }]
+requires-python = ">=3.11"
+dependencies = [
+    "fastai>=2.8.1",
+    "matplotlib>=3.10.1",
+    "numpy>=2.2.5",
+    "pillow>=13.0.0",
+    "scikit-image>=0.25.2",
+    "torch>=2.10.0",
+    "torchvision>=0.25.0",
+    "tqdm>=4.67.1",
+]
+
+[project.optional-dependencies]
+viz = ["torchsummary>=1.5.1", "torchviz>=0.0.3"]
+
+[project.scripts]
+colorize-train = "image_colorizer.train:main"
+colorize = "image_colorizer.cli:main"
+
+[project.urls]
+Repository = "https://github.com/lekenzi/ImageColorization"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["image_colorizer"]
+
+[dependency-groups]
+dev = ["pytest>=8.3", "ruff>=0.11"]
+
+[tool.ruff]
+line-length = 100
+extend-exclude = ["*.ipynb"]
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "B", "UP"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
