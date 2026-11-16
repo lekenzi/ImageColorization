@@ -34,8 +34,8 @@ def main(argv=None):
     model.load_state_dict(torch.load(args.checkpoint, map_location=device, weights_only=True))
 
     input_path = Path(args.input)
-    output_path = Path(args.output) if args.output else input_path.with_name(
-        f"{input_path.stem}_color.png"
+    output_path = (
+        Path(args.output) if args.output else input_path.with_name(f"{input_path.stem}_color.png")
     )
 
     viz = ColorizationVisualizer(model, size=args.image_size, device=device)

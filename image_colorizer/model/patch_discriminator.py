@@ -14,9 +14,7 @@ class PatchDiscriminator(nn.Module):
             for i in range(n_down)
         ]
 
-        model += [
-            self.get_layers(num_filters * 2**n_down, 1, s=1, norm=False, act=False)
-        ]
+        model += [self.get_layers(num_filters * 2**n_down, 1, s=1, norm=False, act=False)]
 
         self.model = nn.Sequential(*model)
 

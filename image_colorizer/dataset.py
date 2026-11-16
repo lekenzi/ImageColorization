@@ -1,7 +1,6 @@
 import glob
 
 import numpy as np
-import torch
 from fastai.data.external import URLs, untar_data  # type: ignore
 from PIL import Image
 from skimage.color import rgb2lab
@@ -32,9 +31,7 @@ class ColorizationDataLoader:
             self.path = self._load_coco_dataset()
 
         paths = sorted(
-            p
-            for ext in ("jpg", "jpeg", "png")
-            for p in glob.glob(f"{self.path}/*.{ext}")
+            p for ext in ("jpg", "jpeg", "png") for p in glob.glob(f"{self.path}/*.{ext}")
         )
         if not paths:
             raise FileNotFoundError(f"No images found in {self.path!r}")
@@ -64,7 +61,9 @@ class ColorizationDataLoader:
             if split == "train":
                 self.transforms = transforms.Compose(
                     [
-                        transforms.Resize((self.size, self.size), transforms.InterpolationMode.BICUBIC),
+                        transforms.Resize(
+                            (self.size, self.size), transforms.InterpolationMode.BICUBIC
+                        ),
                         transforms.RandomHorizontalFlip(),  # A little data augmentation!
                     ]
                 )
@@ -91,9 +90,7 @@ class ColorizationDataLoader:
         train_dataset = self.ColorizationDataset(
             paths=self.train_paths, split="train", size=self.size
         )
-        val_dataset = self.ColorizationDataset(
-            paths=self.val_paths, split="val", size=self.size
-        )
+        val_dataset = self.ColorizationDataset(paths=self.val_paths, split="val", size=self.size)
 
         train_loader = DataLoader(
             train_dataset,
