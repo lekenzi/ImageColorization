@@ -31,18 +31,21 @@ class ColorizationDataLoader:
         if self.path == "":
             self.path = self._load_coco_dataset()
 
-        paths = glob.glob(self.path + "/*.jpg")  # Grabbing all the image file names
-        np.random.seed(123)
-        paths_subset = np.random.choice(
-            paths, self.num_images, replace=False
-        )  # choosing images randomly
-        rand_idxs = np.random.permutation(self.num_images)
-        train_idxs = rand_idxs[
-            : int(self.num_images * 0.8)
-        ]  # choosing the first 80% as training set
-        val_idxs = rand_idxs[
-            int(self.num_images * 0.2) :
-        ]  # choosing last 20% as validation set
+        paths = sorted(
+            p
+            for ext in ("jpg", "jpeg", "png")
+            for p in glob.glob(f"{self.path}/*.{ext}")
+        )
+        if not paths:
+            raise FileNotFoundError(f"No images found in {self.path!r}")
+        self.num_images = min(self.num_images, len(paths))
+
+        rng = np.random.default_rng(123)
+        paths_subset = rng.choice(paths, self.num_images, replace=False)
+        rand_idxs = rng.permutation(self.num_images)
+        split = int(self.num_images * 0.8)
+        train_idxs = rand_idxs[:split]  # first 80% for training
+        val_idxs = rand_idxs[split:]  # remaining 20% for validation
         train_paths = paths_subset[train_idxs]
         val_paths = paths_subset[val_idxs]
         return train_paths, val_paths
@@ -61,13 +64,13 @@ class ColorizationDataLoader:
             if split == "train":
                 self.transforms = transforms.Compose(
                     [
-                        transforms.Resize((self.size, self.size), Image.BICUBIC),
+                        transforms.Resize((self.size, self.size), transforms.InterpolationMode.BICUBIC),
                         transforms.RandomHorizontalFlip(),  # A little data augmentation!
                     ]
                 )
             elif split == "val":
                 self.transforms = transforms.Resize(
-                    (self.size, self.size), Image.BICUBIC
+                    (self.size, self.size), transforms.InterpolationMode.BICUBIC
                 )
 
         def __getitem__(self, idx):

@@ -36,7 +36,7 @@ class ColorizationVisualizer:
         """
         transform = transforms.Compose(
             [
-                transforms.Resize((self.size, self.size), Image.BICUBIC),
+                transforms.Resize((self.size, self.size), transforms.InterpolationMode.BICUBIC),
             ]
         )
 
