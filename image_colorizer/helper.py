@@ -1,4 +1,5 @@
 import time
+from pathlib import Path
 
 import matplotlib.pyplot as plt
 import numpy as np
@@ -58,7 +59,11 @@ def lab_to_rgb(L, ab):
     return np.stack(rgb_imgs, axis=0)
 
 
-def visualize(model, data, save=True):
+def visualize(model, data, save_dir=None):
+    """Plot grayscale input, prediction and ground truth for up to 5 images.
+
+    Saves the figure to ``save_dir`` if given, otherwise shows it.
+    """
     model.net_G.eval()
     with torch.no_grad():
         model.setup_input(data)
@@ -69,8 +74,9 @@ def visualize(model, data, save=True):
     L = model.L
     fake_imgs = lab_to_rgb(L, fake_color)
     real_imgs = lab_to_rgb(L, real_color)
+    n = min(5, L.size(0))
     fig = plt.figure(figsize=(15, 8))
-    for i in range(5):
+    for i in range(n):
         ax = plt.subplot(3, 5, i + 1)
         ax.imshow(L[i][0].cpu(), cmap="gray")
         ax.axis("off")
@@ -80,11 +86,14 @@ def visualize(model, data, save=True):
         ax = plt.subplot(3, 5, i + 1 + 10)
         ax.imshow(real_imgs[i])
         ax.axis("off")
-    plt.show()
 
-
-#     if save:
-#         fig.savefig(f"colorization_{time.time()}.png")
+    if save_dir is None:
+        plt.show()
+    else:
+        save_dir = Path(save_dir)
+        save_dir.mkdir(parents=True, exist_ok=True)
+        fig.savefig(save_dir / f"colorization_{int(time.time())}.png")
+    plt.close(fig)
 
 
 def log_results(loss_meter_dict):
