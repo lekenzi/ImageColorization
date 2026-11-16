@@ -1,18 +1,14 @@
-import os
+"""Image colorization with a U-Net generator trained as a conditional GAN."""
 
 import torch
 
-if torch.backends.mps.is_available():
-    device = torch.device(
-        "mps"
-    )  # Metal Performance Shaders (MPS) for Mac with Apple Silicon
-    device_name = "Mac with Apple Silicon"
-elif torch.cuda.is_available():
-    device = torch.device("cuda")
-    device_name = torch.cuda.get_device_name(0)
-else:
-    device = torch.device("cpu")
-    device_name = "CPU"
+__version__ = "0.1.0"
 
-print(f"Device: {device_name}")
-print(f"Device type: {device}")
+
+def get_device() -> torch.device:
+    """Return the best available device: Apple MPS, then CUDA, then CPU."""
+    if torch.backends.mps.is_available():
+        return torch.device("mps")
+    if torch.cuda.is_available():
+        return torch.device("cuda")
+    return torch.device("cpu")

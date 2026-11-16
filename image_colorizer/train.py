@@ -1,7 +1,7 @@
 import torch
 from tqdm.auto import tqdm
 
-from image_colorizer import device
+from image_colorizer import get_device
 from image_colorizer.dataset import ColorizationDataLoader
 from image_colorizer.helper import visualize
 from image_colorizer.model import MainModel
@@ -80,7 +80,7 @@ class ColorizationTrainer:
 
 
 model = MainModel()
-model = init_model(model, device)
+model = init_model(model, get_device())
 
 colorizationDataLoader = ColorizationDataLoader()
 train_dl, val_dl = colorizationDataLoader.get_dataloaders()

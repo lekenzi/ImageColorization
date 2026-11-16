@@ -1,6 +1,7 @@
 import torch
 from torch import nn, optim
 
+from image_colorizer import get_device
 from image_colorizer.model.gan_loss import GANLoss
 from image_colorizer.model.init_weights import init_model
 from image_colorizer.model.patch_discriminator import PatchDiscriminator
@@ -9,11 +10,18 @@ from image_colorizer.model.unet import Unet
 
 class MainModel(nn.Module):
     def __init__(
-        self, net_G=None, lr_G=2e-4, lr_D=2e-4, beta1=0.5, beta2=0.999, lambda_L1=100.0
+        self,
+        net_G=None,
+        lr_G=2e-4,
+        lr_D=2e-4,
+        beta1=0.5,
+        beta2=0.999,
+        lambda_L1=100.0,
+        device=None,
     ):
         super().__init__()
 
-        self.device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+        self.device = device if device is not None else get_device()
         self.lambda_L1 = lambda_L1
 
         if net_G is None:

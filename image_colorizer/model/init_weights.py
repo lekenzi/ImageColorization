@@ -1,7 +1,5 @@
 from torch import nn
 
-import image_colorizer
-
 
 def init_weights(net, init="norm", gain=0.02):
 
