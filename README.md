@@ -1,61 +1,77 @@
 # ImageColorization
 
-This project aims to provide a solution for colorizing black and white images using deep learning techniques.
-
-## Description
-
-ImageColorization is a Python-based project that utilizes deep learning models to automatically add color to black and white images. The project leverages the power of convolutional neural networks (CNNs) to learn the mapping between grayscale and color images.
-
-## Features
-
-- Automatic colorization of black and white images
-- Support for various image formats (e.g., JPEG, PNG)
-- Easy-to-use command-line interface
-- Customizable colorization options
+Colorize black-and-white photos with deep learning. A U-Net generator predicts the
+`a*b*` color channels from the `L*` (lightness) channel of an image in Lab color space.
+It is trained as a conditional GAN against a PatchGAN discriminator, in the style of pix2pix.
 
 ## Installation
 
-1. Clone the repository:
+Requires Python 3.11+.
 
-    ```shell
-    git clone https://github.com/lekenzi/ImageColorization.git
-    ```
+```shell
+git clone https://github.com/lekenzi/ImageColorization.git
+cd ImageColorization
+uv sync            # or: pip install -e .
+```
 
-2. Install the required dependencies:
-
-    ```shell
-    pip install -r requirements.txt
-    ```
+PyTorch picks the best available device automatically: Apple Silicon (MPS), CUDA or CPU.
 
 ## Usage
 
-1. Navigate to the project directory:
+### Train
 
-    ```shell
-    cd ImageColorization
-    ```
+```shell
+uv run colorize-train --epochs 20 --batch-size 16
+```
 
-2. Run the colorization script:
+If you pass no `--data`, the trainer downloads fastai's COCO sample (~10k images). To use
+your own images instead, point `--data` at a folder of `.jpg`/`.png` files:
 
-    ```shell
-    python colorize.py --input path/to/input_image.jpg --output path/to/output_image.jpg
-    ```
+```shell
+uv run colorize-train --data path/to/images --num-images 5000 --epochs 20
+```
 
-    Replace `path/to/input_image.jpg` with the path to your black and white image, and `path/to/output_image.jpg` with the desired path for the colorized output image.
+The trainer writes a checkpoint to `checkpoints/model.pth` after every epoch. It also saves
+progress plots (input / prediction / ground truth) to `outputs/`. Run
+`uv run colorize-train --help` for all options.
 
-## Contributing
+### Colorize an image
 
-Contributions are welcome! If you'd like to contribute to this project, please follow these steps:
+```shell
+uv run colorize --input old_photo.jpg --output old_photo_color.png --checkpoint checkpoints/model.pth
+```
 
-1. Fork the repository
-2. Create a new branch
-3. Make your changes
-4. Submit a pull request
+The generator runs at 256×256. The predicted colors are then upsampled onto the
+full-resolution lightness channel, so the output keeps the input's original size.
 
-<!-- ## License
+## Project layout
 
-This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for more information. -->
+```
+image_colorizer/
+├── __init__.py              # get_device()
+├── dataset.py               # Lab-space dataset and train/val dataloaders
+├── helper.py                # loss meters, Lab -> RGB, progress plots
+├── train.py                 # ColorizationTrainer + colorize-train CLI
+├── visualize.py             # single-image inference
+├── cli.py                   # colorize CLI
+└── model/
+    ├── __init__.py          # MainModel (GAN wrapper, optimisation step)
+    ├── unet.py              # U-Net generator
+    ├── patch_discriminator.py
+    ├── gan_loss.py
+    └── init_weights.py
+tests/                       # shape and smoke tests (CPU, no dataset needed)
+image-colorization.ipynb     # original exploration notebook
+```
 
-## Contact
+## Development
 
-For any questions or inquiries, please contact the project maintainer at deondmello.com.
+```shell
+uv sync
+uv run ruff check . && uv run ruff format --check .
+uv run pytest
+```
+
+## License
+
+Apache 2.0. See [LICENSE](LICENSE).
