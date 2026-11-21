@@ -54,6 +54,98 @@ uv run colorize --input old_photo.jpg --output old_photo_color.png --checkpoint 
 The generator runs at 256×256. The predicted colors are then upsampled onto the
 full-resolution lightness channel, so the output keeps the input's original size.
 
+## Model architecture
+
+For the full write-up, including the papers this builds on and how it differs from them, see
+[docs/MODEL.md](docs/MODEL.md).
+
+### Training setup
+
+The generator colorizes the `L` channel. The discriminator then scores `L` stacked with
+either the predicted or the real `ab` channels. The generator loss is the GAN loss plus
+100× the L1 distance to the real colors.
+
+```mermaid
+flowchart LR
+    RGB["RGB image<br/>256×256"] --> Lab["Convert to Lab"]
+    Lab --> L["L channel<br/>1×256×256"]
+    Lab --> ab["Real ab<br/>2×256×256"]
+
+    L --> G["U-Net generator"]
+    G --> fake["Predicted ab<br/>2×256×256"]
+
+    L --> catF["concat"]
+    fake --> catF
+    L --> catR["concat"]
+    ab --> catR
+
+    catF -- "fake Lab<br/>3×256×256" --> D["PatchGAN discriminator"]
+    catR -- "real Lab<br/>3×256×256" --> D
+    D --> patch["30×30 real/fake logits"]
+
+    patch --> lossD["D loss<br/>BCE(real→1, fake→0)"]
+    patch --> lossGAN["G adversarial loss<br/>BCE(fake→1)"]
+    fake --> lossL1["L1(pred ab, real ab) × 100"]
+    ab --> lossL1
+    lossGAN --> lossG["G loss"]
+    lossL1 --> lossG
+```
+
+### U-Net generator
+
+Eight stride-2 downsampling blocks with a skip connection at every level. The three
+512-channel decoder blocks nearest the bottleneck use dropout of 0.5. Shapes below are for
+a 256×256 input.
+
+```mermaid
+flowchart TB
+    in["L input<br/>1×256×256"]
+    d1["Conv ↓<br/>64×128×128"]
+    d2["LReLU · Conv ↓ · BN<br/>128×64×64"]
+    d3["LReLU · Conv ↓ · BN<br/>256×32×32"]
+    d4["LReLU · Conv ↓ · BN<br/>512×16×16"]
+    d5["LReLU · Conv ↓ · BN<br/>512×8×8"]
+    d6["LReLU · Conv ↓ · BN<br/>512×4×4"]
+    d7["LReLU · Conv ↓ · BN<br/>512×2×2"]
+    b["Bottleneck: LReLU · Conv ↓<br/>512×1×1"]
+
+    u7["ReLU · ConvT ↑ · BN<br/>512×2×2"]
+    u6["ReLU · ConvT ↑ · BN · Dropout<br/>512×4×4"]
+    u5["ReLU · ConvT ↑ · BN · Dropout<br/>512×8×8"]
+    u4["ReLU · ConvT ↑ · BN · Dropout<br/>512×16×16"]
+    u3["ReLU · ConvT ↑ · BN<br/>256×32×32"]
+    u2["ReLU · ConvT ↑ · BN<br/>128×64×64"]
+    u1["ReLU · ConvT ↑ · BN<br/>64×128×128"]
+    out["ReLU · ConvT ↑ · Tanh<br/>ab output 2×256×256"]
+
+    in --> d1 --> d2 --> d3 --> d4 --> d5 --> d6 --> d7 --> b
+    b --> u7 --> u6 --> u5 --> u4 --> u3 --> u2 --> u1 --> out
+
+    d7 -. "skip (concat)" .-> u6
+    d6 -. "skip" .-> u5
+    d5 -. "skip" .-> u4
+    d4 -. "skip" .-> u3
+    d3 -. "skip" .-> u2
+    d2 -. "skip" .-> u1
+    d1 -. "skip" .-> out
+```
+
+### PatchGAN discriminator
+
+The discriminator classifies overlapping patches instead of the whole image. Each of the
+30×30 output logits sees a 70×70 receptive field.
+
+```mermaid
+flowchart LR
+    x["Lab input<br/>3×256×256"]
+    c1["Conv s2 · LReLU<br/>64×128×128"]
+    c2["Conv s2 · BN · LReLU<br/>128×64×64"]
+    c3["Conv s2 · BN · LReLU<br/>256×32×32"]
+    c4["Conv s1 · BN · LReLU<br/>512×31×31"]
+    c5["Conv s1<br/>1×30×30 logits"]
+    x --> c1 --> c2 --> c3 --> c4 --> c5
+```
+
 ## Project layout
 
 ```
